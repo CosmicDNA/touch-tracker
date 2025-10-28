@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 
 /**
- * @type {React.RefObject<HTMLCanvasElement>}
+ * @type {HTMLCanvasElement}
  */
 const initialCanvasRef = null
 
@@ -15,19 +15,13 @@ const KeyPressDetectionFloor = () => {
   const canvasRef = useRef(initialCanvasRef)
   const [context, setContext] = useState(initialContext)
 
-  const devicePixelRatio = window.devicePixelRatio || 1
-
   useEffect(() => {
     if (canvasRef.current) {
-      /**
-       * @type {CanvasRenderingContext2D}
-       */
       const ctx = canvasRef.current.getContext('2d')
-      ctx.scale(devicePixelRatio, devicePixelRatio)
       setContext(ctx)
     }
     // The empty dependency array ensures this effect runs only once after the component mounts.
-  }, [devicePixelRatio])
+  }, [])
 
   /**
    *
@@ -91,13 +85,16 @@ const KeyPressDetectionFloor = () => {
         onContextMenu={(e) => { e.preventDefault() }}
         ref={canvasRef}
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
           width: window.innerWidth + 'px',
           height: window.innerHeight + 'px',
           touchAction: 'none',
           msTouchAction: 'none'
         }}
-        width={innerWidth}
-        height={innerHeight}
+        width={window.innerWidth}
+        height={window.innerHeight}
       >
       </canvas>
     </div>
