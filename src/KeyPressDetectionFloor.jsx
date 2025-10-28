@@ -23,7 +23,7 @@ const KeyPressDetectionFloor = () => {
        * @type {CanvasRenderingContext2D}
        */
       const ctx = canvasRef.current.getContext('2d')
-      ctx.scale(devicePixelRatio, devicePixelRatio);
+      ctx.scale(devicePixelRatio, devicePixelRatio)
       setContext(ctx)
     }
     // The empty dependency array ensures this effect runs only once after the component mounts.
@@ -31,39 +31,35 @@ const KeyPressDetectionFloor = () => {
 
   const draw = (points) => () => {
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-    context.strokeStyle = "#eee";
-    context.lineWidth = "10";
+    context.strokeStyle = "#eee"
+    context.lineWidth = "10"
 
     for (const touch of points) {
-      const rotationAngle = touch.rotationAngle || 0;
+      const rotationAngle = touch.rotationAngle || 0
       // add some pixels for better visibility
-      const radiusX = touch.radiusX || 40 + 20;
-      const radiusY = touch.radiusY || 40 + 20;
+      const radiusX = touch.radiusX || 40 + 20
+      const radiusY = touch.radiusY || 40 + 20
 
-      /* draw all circles */
-      context.beginPath();
-      context.ellipse(touch.clientX, touch.clientY, radiusX, radiusY, rotationAngle * Math.PI / 180, 0, Math.PI * 2, true);
-      context.stroke();
+      /* draw all ellipses */
+      context.beginPath()
+      context.ellipse(touch.clientX, touch.clientY, radiusX, radiusY, rotationAngle * Math.PI / 180, 0, Math.PI * 2, true)
+      context.stroke()
 
-      // HUD (hacky)
-      var hud_props = ['touch', 'clientX: ' + touch.clientX + ' clientY: ' + touch.clientY];
-      if (touch.radiusX && touch.radiusY) {
-        hud_props.push('radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY);
-      }
-      if (touch.rotationAngle) {
-        hud_props.push('rotationAngle: ' + touch.rotationAngle);
-      }
-      if (touch.force) {
-        hud_props.push('force: ' + touch.force);
-      }
+      /* draw HUD */
+      const hud_props = [
+        'touch', 'clientX: ' + touch.clientX + ' clientY: ' + touch.clientY,
+        'radiusX: ' + touch?.radiusX + ' radiusY: ' + touch?.radiusY,
+        'rotationAngle: ' + touch?.rotationAngle,
+        'force: ' + touch?.force
+      ]
 
-      context.font = "30px Arial";
-      context.fillStyle = "#fff";
-      context.fillText(hud_props[0], touch.clientX + radiusX + 20, touch.clientY);
-      context.fillStyle = "#aaa";
-      context.font = "10px Arial";
+      context.font = "30px Arial"
+      context.fillStyle = "#fff"
+      context.fillText(hud_props[0], touch.clientX + radiusX + 20, touch.clientY)
+      context.fillStyle = "#aaa"
+      context.font = "10px Arial"
       hud_props.slice(1).forEach((hud_prop, h_i) => {
-        context.fillText(hud_prop, touch.clientX + radiusX + 20, touch.clientY + (h_i + 2) * 12);
+        context.fillText(hud_prop, touch.clientX + radiusX + 20, touch.clientY + (h_i + 2) * 12)
       })
     }
   }
@@ -74,19 +70,18 @@ const KeyPressDetectionFloor = () => {
    */
   const positionHandler = (e) => {
     // stop scrolling etc
-    e.preventDefault();
+    e.preventDefault()
 
-    window.requestAnimationFrame(draw(Array.from(e.targetTouches)));
+    window.requestAnimationFrame(draw(Array.from(e.targetTouches)))
   }
 
   return (
     <div className='container'>
       <canvas
-
-        onTouchStart={e => positionHandler(e)}
-        onTouchMove={e => positionHandler(e)}
-        onTouchEnd={e => positionHandler(e)}
-        onTouchCancel={e => positionHandler(e)}
+        onTouchStart={positionHandler}
+        onTouchMove={positionHandler}
+        onTouchEnd={positionHandler}
+        onTouchCancel={positionHandler}
 
         onContextMenu={(e) => { e.preventDefault() }}
         ref={canvasRef}
