@@ -62,9 +62,9 @@ const KeyPressDetectionFloor = () => {
       context.fillText(hud_props[0], touch.clientX + radiusX + 20, touch.clientY);
       context.fillStyle = "#aaa";
       context.font = "10px Arial";
-      for (var h_i = 1, h_j = hud_props.length; h_i < h_j; h_i++) {
-        context.fillText(hud_props[h_i], touch.clientX + radiusX + 20, touch.clientY + (h_i + 1) * 12);
-      }
+      hud_props.slice(1).forEach((hud_prop, h_i) => {
+        context.fillText(hud_prop, touch.clientX + radiusX + 20, touch.clientY + (h_i + 2) * 12);
+      })
     }
   }
 
@@ -96,8 +96,8 @@ const KeyPressDetectionFloor = () => {
           touchAction: 'none',
           msTouchAction: 'none'
         }}
-        width={innerWidth * devicePixelRatio}
-        height={innerHeight * devicePixelRatio}
+        width={innerWidth}
+        height={innerHeight}
       >
       </canvas>
     </div>
