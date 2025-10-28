@@ -17,8 +17,7 @@ const KeyPressDetectionFloor = () => {
 
   useEffect(() => {
     if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
-      setContext(ctx)
+      setContext(canvasRef.current.getContext('2d'))
     }
     // The empty dependency array ensures this effect runs only once after the component mounts.
   }, [])
@@ -44,20 +43,22 @@ const KeyPressDetectionFloor = () => {
       context.ellipse(touch.clientX, touch.clientY, radiusX, radiusY, rotationAngle * Math.PI / 180, 0, Math.PI * 2, true)
       context.stroke()
 
-      /* draw HUD */
-      const hud_props = [
-        'touch', 'clientX: ' + touch.clientX + ' clientY: ' + touch.clientY,
-        'radiusX: ' + touch?.radiusX + ' radiusY: ' + touch?.radiusY,
-        'rotationAngle: ' + touch?.rotationAngle,
-        'force: ' + touch?.force
+      const extra = [
+        'clientX: ' + touch.clientX + ' clientY: ' + touch.clientY,
+        'radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY,
+        'rotationAngle: ' + touch.rotationAngle,
+        'force: ' + touch.force
       ]
 
+      const touch_string = 'touch'
+
+      /* draw HUD */
       context.font = "30px Arial"
       context.fillStyle = "#fff"
-      context.fillText(hud_props[0], touch.clientX + radiusX + 20, touch.clientY)
+      context.fillText(touch_string, touch.clientX + radiusX + 20, touch.clientY)
       context.fillStyle = "#aaa"
       context.font = "10px Arial"
-      hud_props.slice(1).forEach((hud_prop, h_i) => {
+      extra.forEach((hud_prop, h_i) => {
         context.fillText(hud_prop, touch.clientX + radiusX + 20, touch.clientY + (h_i + 2) * 12)
       })
     }
@@ -75,29 +76,27 @@ const KeyPressDetectionFloor = () => {
   }
 
   return (
-    <div className='container'>
-      <canvas
-        onTouchStart={positionHandler}
-        onTouchMove={positionHandler}
-        onTouchEnd={positionHandler}
-        onTouchCancel={positionHandler}
+    <canvas
+      onTouchStart={positionHandler}
+      onTouchMove={positionHandler}
+      onTouchEnd={positionHandler}
+      onTouchCancel={positionHandler}
 
-        onContextMenu={(e) => { e.preventDefault() }}
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: window.innerWidth + 'px',
-          height: window.innerHeight + 'px',
-          touchAction: 'none',
-          msTouchAction: 'none'
-        }}
-        width={window.innerWidth}
-        height={window.innerHeight}
-      >
-      </canvas>
-    </div>
+      onContextMenu={(e) => { e.preventDefault() }}
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: window.innerWidth + 'px',
+        height: window.innerHeight + 'px',
+        touchAction: 'none',
+        msTouchAction: 'none'
+      }}
+      width={window.innerWidth}
+      height={window.innerHeight}
+    >
+    </canvas>
   )
 }
 
