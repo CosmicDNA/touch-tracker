@@ -29,6 +29,11 @@ const KeyPressDetectionFloor = () => {
     // The empty dependency array ensures this effect runs only once after the component mounts.
   }, [devicePixelRatio])
 
+  /**
+   *
+   * @param {Touch[]} points
+   * @returns
+   */
   const draw = (points) => () => {
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
     context.strokeStyle = "#eee"
