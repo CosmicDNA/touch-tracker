@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@vitejs/plugin-legacy": "^7.2.1",
+    "konva": "^10.0.8",
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-json-pretty": "^2.2.0",
+    "react-konva": "^19.2.0",
     "three": "^0.180.0"
   },
   "devDependencies": {

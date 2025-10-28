@@ -1,98 +1,73 @@
-import { useEffect, useRef } from 'react'
-// import { useThree } from '@react-three/fiber'
+import { useRef, useMemo } from 'react'
 
 /**
  * A hook to handle multi-touch drag gestures on the R3F canvas.
  * @param {Function} handler - The function to call on drag events.
  *   It receives an object with { type: 'onDragStart' | 'onDragMove' | 'onDragEnd', nativeType: string, touch: Touch }.
+ * @returns {object} An object with event handlers to spread onto a component.
  */
 const useMultiTouchDrag = (handler) => {
-  // const { gl } = useThree()
   // Ref to store currently tracked touches. Maps touch.identifier to the Touch object.
   const trackedTouches = useRef(new Map())
 
-  useEffect(() => {
-    // const element = gl.domElement
-    const element = window.document.body
-    if (!element) return
-
+  const handlers = useMemo(() => {
+    if (!handler) return {}
     /**
-     *
-     * @param {TouchEvent} evt
+     * @param {React.TouchEvent<Element>} evt
      */
-    const handleStart = (evt) => {
-      // evt.preventDefault() // Prevent default browser actions (like scrolling, zooming)
-
-      for (const touch of evt.changedTouches) {
+    const onTouchStart = (evt) => {
+      evt.preventDefault()
+      const touches = Array.from(evt.changedTouches);
+      for (const touch of touches) {
         trackedTouches.current.set(touch.identifier, touch)
-        handler({ type: evt.type, touch })
       }
+      handler({ type: evt.type, touches })
     }
 
     /**
-     *
-     * @param {TouchEvent} evt
+     * @param {React.TouchEvent<Element>} evt
      */
-    const handleMove = (evt) => {
-      // evt.preventDefault() // Prevent default browser actions (like scrolling, zooming)
-
-      for (const touch of evt.changedTouches) {
+    const onTouchMove = (evt) => {
+      evt.preventDefault()
+      const touches = Array.from(evt.changedTouches);
+      for (const touch of touches) {
         if (trackedTouches.current.has(touch.identifier)) {
           trackedTouches.current.set(touch.identifier, touch) // Update touch data
-          handler({ type: evt.type, touch })
         }
       }
+      handler({ type: evt.type, touches })
     }
 
     /**
-     *
-     * @param {Boolean} end
-     * @returns {function(TouchEvent): void}
+     * @param {boolean} isEnd
+     * @returns {(evt: React.TouchEvent<Element>) => void}
      */
-    const handleDelete = (end) =>
-      /**
-       * Inner function that adds the outer parameter to its own parameter.
-       *
-       * @param {TouchEvent} evt - The touch event.
-       */
-      (evt) => {
-        // evt.preventDefault() // Prevent default browser actions (like scrolling, zooming)
-
-        for (const touch of evt.changedTouches) {
-          if (trackedTouches.current.has(touch.identifier)) {
-            handler({ type: evt.type, touch })
-            trackedTouches.current.delete(touch.identifier) // Remove from tracking
-          } else {
-            if (end) console.log("can't figure out which touch to end")
-          }
+    const createDeleteHandler = (isEnd) => (evt) => {
+      evt.preventDefault()
+      const touches = Array.from(evt.changedTouches);
+      for (const touch of touches) {
+        if (trackedTouches.current.has(touch.identifier)) {
+          trackedTouches.current.delete(touch.identifier) // Remove from tracking
+        } else {
+          if (isEnd) console.log("can't figure out which touch to end")
         }
       }
-
-    const listeners = [
-      { type: 'touchstart', handler: handleStart },
-      { type: 'touchmove', handler: handleMove },
-      { type: 'touchend', handler: handleDelete(true) },
-      { type: 'touchcancel', handler: handleDelete(false) }
-    ]
-
-    /**
-     *
-     * @param {'addEventListener' | 'removeEventListener'} method
-     */
-    const processListeners = (method) => {
-      listeners.forEach(({ type, handler }) => {
-        element[method](type, handler)
-      })
+      handler({ type: evt.type, touches })
     }
 
-    // Add native event listeners
-    processListeners('addEventListener')
-
-    // Cleanup function to remove event listeners
-    return () => {
-      processListeners('removeEventListener')
+    const bind = () => {
+      return {
+        onTouchStart,
+        onTouchMove,
+        onTouchEnd: createDeleteHandler(true),
+        onTouchCancel: createDeleteHandler(false)
+      }
     }
+
+    return bind
   }, [handler])
+
+  return handlers
 }
 
 export default useMultiTouchDrag
