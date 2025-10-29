@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 /**
  * @type {HTMLCanvasElement}
@@ -12,14 +12,14 @@ const initialContext = null
 
 const KeyPressDetectionFloor = () => {
   const canvasRef = useRef(initialCanvasRef)
-  const [context, setContext] = useState(initialContext)
+  const contextRef = useRef(initialContext)
 
   useEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d')
       ctx.strokeStyle = '#aaa'
       ctx.lineWidth = '10'
-      setContext(ctx)
+      contextRef.current = ctx
     }
     // The empty dependency array ensures this effect runs only once after the component mounts.
   }, [])
@@ -29,7 +29,9 @@ const KeyPressDetectionFloor = () => {
    * @param {Touch[]} points
    * @returns
    */
-  const draw = (points) => () => {
+  const draw = useCallback((points) => {
+    const context = contextRef.current
+    if (!context) return
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
     for (const touch of points) {
@@ -69,18 +71,18 @@ const KeyPressDetectionFloor = () => {
         context.fillText(hudProp, touch.clientX + radiusX + 20, touch.clientY + (hIndex + 2) * 12)
       })
     }
-  }
+  }, [])
 
   /**
    *
    * @param {TouchEvent} e
    */
-  const positionHandler = (e) => {
+  const positionHandler = useCallback((e) => {
     // stop scrolling etc
     e.preventDefault()
 
-    window.requestAnimationFrame(draw(Array.from(e.targetTouches)))
-  }
+    window.requestAnimationFrame(() => draw(Array.from(e.targetTouches)))
+  }, [draw])
 
   return (
     <canvas
@@ -103,9 +105,6 @@ const KeyPressDetectionFloor = () => {
       height={window.innerHeight}
     />
   )
-}
-
-KeyPressDetectionFloor.propTypes = {
 }
 
 export default KeyPressDetectionFloor
