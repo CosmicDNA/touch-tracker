@@ -1,8 +1,8 @@
 import React from 'react'
 import './App.css'
-import KeyPressDetectionFloor from './KeyPressDetectionFloor'
+import KeyPressDetectionFloor from './KeyPressDetectionFloor.jsx'
 
-function App() {
+const App = () => {
 
   return (
     <KeyPressDetectionFloor />
