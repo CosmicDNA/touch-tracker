@@ -1,5 +1,9 @@
 # Touch Tracker
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/451cd02f-c290-4ce7-83aa-d77a1110448f/deploy-status)](https://app.netlify.com/projects/touchtracker/deploys)
+![GitHub License](https://img.shields.io/github/license/CosmicDNA/touch-tracker)
+[![DeepScan grade](https://deepscan.io/api/teams/23301/projects/30555/branches/982345/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=23301&pid=30555&bid=982345)
+
 A simple, performant web application for visualizing multi-touch events on a full-screen canvas. This tool is designed to help developers and designers inspect the properties of touch interactions in real-time, including position, size, and rotation.
 
 ## Features
