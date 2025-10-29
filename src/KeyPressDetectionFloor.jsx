@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 
 /**
@@ -18,8 +17,8 @@ const KeyPressDetectionFloor = () => {
   useEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d')
-      ctx.strokeStyle = "#aaa"
-      ctx.lineWidth = "10"
+      ctx.strokeStyle = '#aaa'
+      ctx.lineWidth = '10'
       setContext(ctx)
     }
     // The empty dependency array ensures this effect runs only once after the component mounts.
@@ -44,38 +43,32 @@ const KeyPressDetectionFloor = () => {
       context.ellipse(touch.clientX, touch.clientY, radiusX, radiusY, rotationAngle * Math.PI / 180, 0, Math.PI * 2, true)
       context.stroke()
 
-      const clientCoords_props = ['clientX: '+touch.clientX+' clientY: ' + touch.clientY]
+      const clientCoordsProps = ['clientX: ' + touch.clientX + ' clientY: ' + touch.clientY]
 
       const radii = touch.radiusX && touch.radiusY
-      let radii_props
-      if (radii)
-        radii_props = ['radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY]
-      else
-        radii_props = []
+      let radiiProps
+      if (radii) { radiiProps = ['radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY] } else { radiiProps = [] }
 
-      let rotationAngle_props
-      if (touch.rotationAngle)
-        rotationAngle_props = ['rotationAngle: ' + touch.rotationAngle]
-      else
-        rotationAngle_props = []
+      let rotationAngleProps
+      if (touch.rotationAngle) { rotationAngleProps = ['rotationAngle: ' + touch.rotationAngle] } else { rotationAngleProps = [] }
 
       const extra = [
-        clientCoords_props,
-        radii_props,
-        rotationAngle_props
+        clientCoordsProps,
+        radiiProps,
+        rotationAngleProps
       ].flat()
 
-      const touch_string = 'touch'
+      const touchString = 'touch'
 
       /* draw HUD */
-      context.font = "30px Arial"
-      context.fillStyle = "#fff"
-      context.fillText(touch_string, touch.clientX + radiusX + 20, touch.clientY)
-      context.fillStyle = "#aaa"
-      context.font = "10px Arial"
+      context.font = '30px Arial'
+      context.fillStyle = '#fff'
+      context.fillText(touchString, touch.clientX + radiusX + 20, touch.clientY)
+      context.fillStyle = '#aaa'
+      context.font = '10px Arial'
 
-      extra.forEach((hud_prop, h_i) => {
-        context.fillText(hud_prop, touch.clientX + radiusX + 20, touch.clientY + (h_i + 2) * 12)
+      extra.forEach((hudProp, hIndex) => {
+        context.fillText(hudProp, touch.clientX + radiusX + 20, touch.clientY + (hIndex + 2) * 12)
       })
     }
   }
@@ -97,7 +90,6 @@ const KeyPressDetectionFloor = () => {
       onTouchMove={positionHandler}
       onTouchEnd={positionHandler}
       onTouchCancel={positionHandler}
-
       onContextMenu={(e) => { e.preventDefault() }}
       ref={canvasRef}
       style={{
@@ -111,8 +103,7 @@ const KeyPressDetectionFloor = () => {
       }}
       width={window.innerWidth}
       height={window.innerHeight}
-    >
-    </canvas>
+    />
   )
 }
 

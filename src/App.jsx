@@ -3,7 +3,6 @@ import './App.css'
 import KeyPressDetectionFloor from './KeyPressDetectionFloor.jsx'
 
 const App = () => {
-
   return (
     <KeyPressDetectionFloor />
   )
