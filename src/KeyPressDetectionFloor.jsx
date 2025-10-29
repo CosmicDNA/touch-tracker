@@ -1,28 +1,17 @@
-import React, { useCallback, useEffect, useRef } from 'react'
-
-/**
- * @type {HTMLCanvasElement}
- */
-const initialCanvasRef = null
-
-/**
- * @type {CanvasRenderingContext2D}
- */
-const initialContext = null
+import React, { useCallback } from 'react'
+import { useCanvasContext } from './hooks/useCanvasContext'
 
 const KeyPressDetectionFloor = () => {
-  const canvasRef = useRef(initialCanvasRef)
-  const contextRef = useRef(initialContext)
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
+  // Use our custom hook to get canvas and context refs
+  const { canvasRef, contextRef } = useCanvasContext(
+    /**
+     *
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    (ctx) => {
       ctx.strokeStyle = '#aaa'
       ctx.lineWidth = '10'
-      contextRef.current = ctx
-    }
-    // The empty dependency array ensures this effect runs only once after the component mounts.
-  }, [])
+    })
 
   /**
    *
@@ -31,12 +20,11 @@ const KeyPressDetectionFloor = () => {
    */
   const draw = useCallback((points) => {
     const context = contextRef.current
-    if (!context) return
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
     for (const touch of points) {
+      // use fallback for touch devices that do not report either radii or rotationAngle correctly
       const rotationAngle = touch.rotationAngle || 0
-      // add some pixels for better visibility
       const radiusX = touch.radiusX || 40
       const radiusY = touch.radiusY || 40
 
@@ -71,7 +59,7 @@ const KeyPressDetectionFloor = () => {
         context.fillText(hudProp, touch.clientX + radiusX + 20, touch.clientY + (hIndex + 2) * 12)
       })
     }
-  }, [])
+  }, [canvasRef, contextRef])
 
   /**
    *
