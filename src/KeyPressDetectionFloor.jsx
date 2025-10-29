@@ -46,11 +46,9 @@ const KeyPressDetectionFloor = () => {
       const clientCoordsProps = ['clientX: ' + touch.clientX + ' clientY: ' + touch.clientY]
 
       const radii = touch.radiusX && touch.radiusY
-      let radiiProps
-      if (radii) { radiiProps = ['radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY] } else { radiiProps = [] }
+      const radiiProps = radii ? ['radiusX: ' + touch.radiusX + ' radiusY: ' + touch.radiusY] : []
 
-      let rotationAngleProps
-      if (touch.rotationAngle) { rotationAngleProps = ['rotationAngle: ' + touch.rotationAngle] } else { rotationAngleProps = [] }
+      const rotationAngleProps = touch.rotationAngle ? ['rotationAngle: ' + touch.rotationAngle] : []
 
       const extra = [
         clientCoordsProps,
